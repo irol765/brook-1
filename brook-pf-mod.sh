@@ -5,7 +5,7 @@ export PATH
 #=================================================
 #   System Required: CentOS/Debian/Ubuntu
 #   Description: Brook
-#   Version: 1.0.2
+#   Version: 1.0.3
 #   Author: Toyo,yulewang(DDNS features),monret(CNAME, iptables),irol765(supper new_ver)
 #=================================================
 
