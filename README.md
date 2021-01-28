@@ -1,9 +1,9 @@
-# Brook端口转发一键脚本再次修改版
-Brook 端口转发 一键管理脚本再次修改版 基于逗比，yulewang版本修改而来。
+# Brook端口转发一键脚本修改版
+Brook 端口转发 一键管理脚本修改版 基于逗比/yulewang/newcastlecy版本修改而来。
 
-去掉了更新之类的功能。删除iptables端口放行规则，更换为全允许。
+去掉了更新之类的功能。删除iptables端口放行规则，更换为全允许。只能支持20200801之后的版本。
 
-解决之前脚本不支持CNAME的问题，将DDNS监测周期更换为1min。
+解决之前脚本不支持20200801之后版本的问题，还会不支持CNAME的问题，将DDNS监测周期更换为1min。
 
 -----------------------------------------------------------------------------
 
@@ -24,11 +24,11 @@ Brook 端口转发 一键管理脚本再次修改版 基于逗比，yulewang版�
 
 ## 使用方法
 ```shell
-wget -qO brook-pf-mod.sh https://raw.githubusercontent.com/monret/brook/master/brook-pf-mod.sh && chmod +x brook-pf-mod.sh && bash brook-pf-mod.sh
+wget -qO brook-pf-mod.sh https://github.com/irol765/brook-1/blob/master/brook-pf-mod.sh && chmod +x brook-pf-mod.sh && bash brook-pf-mod.sh
 ```
 执行结果：
 ```
-  Brook 端口转发 一键管理脚本修改版(DDNS支持) [v1.0.1]  
+  Brook 端口转发 一键管理脚本修改版(DDNS支持) [v1.0.2]  
   1. 安装 Brook
   2. 卸载 Brook
 ————————————
