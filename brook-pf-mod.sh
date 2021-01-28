@@ -5,11 +5,11 @@ export PATH
 #=================================================
 #   System Required: CentOS/Debian/Ubuntu
 #   Description: Brook
-#   Version: 1.0.3
+#   Version: 1.0.4
 #   Author: Toyo,yulewang(DDNS features),monret(CNAME, iptables),irol765(supper new_ver)
 #=================================================
 
-sh_ver="1.0.3"
+sh_ver="1.0.4"
 filepath=$(cd "$(dirname "$0")"; pwd)
 file_1=$(echo -e "${filepath}"|awk -F "$0" '{print $1}')
 file="/usr/local/brook-pf"
