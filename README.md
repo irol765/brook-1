@@ -3,7 +3,7 @@ Brook 端口转发 一键管理脚本修改版 基于逗比/yulewang/newcastlecy
 
 恢复了更新之类的功能。删除iptables端口放行规则，更换为全允许。
 
-解决之前脚本不支持20200801之后版本的问题，还有会不支持CNAME的问题，将DDNS监测周期更换为1min。
+解决之前脚本不支持20200801之后版本的问题，还有会不支持CNAME的问题，将DDNS监测周期更换为1min。本脚本不支持20200801及之前版本brook。
 
 -----------------------------------------------------------------------------
 
@@ -24,9 +24,17 @@ Brook 端口转发 一键管理脚本修改版 基于逗比/yulewang/newcastlecy
 首先即是无法转发端口段，如要转发端口段则请避免使用此转发脚本。其次对系统的资源(CPU,RAM)有一定占用，当然比隧道还是好多了xx
 
 ## 使用方法
+
+20200801之后版本使用此脚本：
 ```shell
 wget -qO brook-pf-mod.sh https://raw.githubusercontent.com/irol765/brook-1/master/brook-pf-mod.sh && chmod +x brook-pf-mod.sh && bash brook-pf-mod.sh
 ```
+
+20200801及之前版本使用此脚本：
+```shell
+wget -qO brook-pf-mod.sh https://raw.githubusercontent.com/monret/brook/master/brook-pf-mod.sh && chmod +x brook-pf-mod.sh && bash brook-pf-mod.sh
+```
+
 执行结果：
 ```
   Brook 端口转发 一键管理脚本修改版(DDNS支持) [v1.0.4]
