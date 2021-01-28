@@ -87,6 +87,25 @@ check_new_ver(){
         echo -e "${Info} 开始下载 Brook [ ${brook_new_ver} ] 版本！"
     fi
 }
+check_ver_comparison(){
+    brook_now_ver=$(${brook_file} -v|awk '{print $3}')
+    [[ -z ${brook_now_ver} ]] && echo -e "${Error} Brook 当前版本获取失败 !" && exit 1
+    brook_now_ver="v${brook_now_ver}"
+    if [[ "${brook_now_ver}" != "${brook_new_ver}" ]]; then
+        echo -e "${Info} 发现 Brook 已有新版本 [ ${brook_new_ver} ]，旧版本 [ ${brook_now_ver} ]"
+        read -e -p "是否更新 ? [Y/n] :" yn
+        [[ -z "${yn}" ]] && yn="y"
+        if [[ $yn == [Yy] ]]; then
+            check_pid
+            [[ ! -z $PID ]] && kill -9 ${PID}
+            rm -rf ${brook_file}
+            Download_brook
+            Start_brook
+        fi
+    else
+        echo -e "${Info} 当前 Brook 已是最新版本 [ ${brook_new_ver} ]" && exit 1
+    fi
+}
 check_domain_ip_change(){
     Modify_success="0"
     user_all=$(cat ${brook_conf}|sed '/^\s*$/d')
@@ -513,6 +532,22 @@ Install_brook(){
     Set_iptables
     echo -e "${Info} Brook 安装完成！默认配置文件为空，请选择 [设置 Brook 端口转发 - 添加 端口转发] 来添加端口转发。"
 }
+Update_brook(){
+    check_installed_status
+    echo && echo -e "下载最新版
+ ${Green_font_prefix}2.${Font_color_suffix}  国外服务器(Github)
+ 
+ ${Tip} 因为国内对 Github 限速，这会导致国内服务器下载速度极慢，如不能下载请自行手动安装" && echo
+    read -e -p "(默认: 2 国外服务器):" bk_Download
+    [[ -z "${bk_Download}" ]] && bk_Download="2"
+    if [[ ${bk_Download} == "1" ]]; then
+        Download_type="2"
+    else
+        Download_type="2"
+    fi
+    check_new_ver
+    check_ver_comparison
+}
 Start_brook(){
     check_installed_status
     check_pid
@@ -667,28 +702,40 @@ Resolve_Hostname_To_IP(){
         echo -e "${Error} Could not resolve hostname [${bk_domain_pf}] !" && exit 1
     fi
 }
+Update_Shell(){
+    sh_new_ver=$(wget --no-check-certificate -qO- -t1 -T3 "https://raw.githubusercontent.com/irol765/brook-1/master/brook-pf-mod.sh"|grep 'sh_ver="'|awk -F "=" '{print $NF}'|sed 's/\"//g'|head -1) && sh_new_type="github"
+    [[ -z ${sh_new_ver} ]] && echo -e "${Error} 无法链接到 Github !" && exit 0
+    if [[ -e "/etc/init.d/brook-pf" ]]; then
+        rm -rf /etc/init.d/brook-pf
+        Service_brook
+    fi
+    wget -qO brook-pf-mod.sh https://raw.githubusercontent.com/irol765/brook-1/master/brook-pf-mod.sh && chmod +x brook-pf-mod.sh && bash brook-pf-mod.sh
+    echo -e "脚本已更新为最新版本[ ${sh_new_ver} ] !(注意：因为更新方式为直接覆盖当前运行的脚本，所以可能下面会提示一些报错，无视即可)" && exit 0
+}
 check_sys
 action=$1
 if [[ "${action}" == "monitor" ]]; then
     crontab_monitor_brook
 else
     echo && echo -e "  Brook 端口转发 一键管理脚本修改版(DDNS支持) ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix}
-  
+ ${Green_font_prefix} 0.${Font_color_suffix} 升级脚本
+———————————— 
  ${Green_font_prefix} 1.${Font_color_suffix} 安装 Brook
- ${Green_font_prefix} 2.${Font_color_suffix} 卸载 Brook
+ ${Green_font_prefix} 2.${Font_color_suffix} 更新 Brook
+ ${Green_font_prefix} 3.${Font_color_suffix} 卸载 Brook
 ————————————
- ${Green_font_prefix} 3.${Font_color_suffix} 启动 Brook
- ${Green_font_prefix} 4.${Font_color_suffix} 停止 Brook
- ${Green_font_prefix} 5.${Font_color_suffix} 重启 Brook
+ ${Green_font_prefix} 4.${Font_color_suffix} 启动 Brook
+ ${Green_font_prefix} 5.${Font_color_suffix} 停止 Brook
+ ${Green_font_prefix} 6.${Font_color_suffix} 重启 Brook
 ————————————
- ${Green_font_prefix} 6.${Font_color_suffix} 设置 Brook 端口转发
- ${Green_font_prefix} 7.${Font_color_suffix} 查看 Brook 端口转发
- ${Green_font_prefix} 8.${Font_color_suffix} 查看 Brook 日志
- ${Green_font_prefix} 9.${Font_color_suffix} 监控 Brook 运行状态(如果使用DDNS必须打开)
+ ${Green_font_prefix} 7.${Font_color_suffix} 设置 Brook 端口转发
+ ${Green_font_prefix} 8.${Font_color_suffix} 查看 Brook 端口转发
+ ${Green_font_prefix} 9.${Font_color_suffix} 查看 Brook 日志
+ ${Green_font_prefix} 10.${Font_color_suffix} 监控 Brook 运行状态(如果使用DDNS必须打开)
  ————————————
- ${Green_font_prefix}10.${Font_color_suffix} 安装CNAME依赖(若添加DDNS出现异常)
- ${Green_font_prefix}11.${Font_color_suffix} 安装服务脚本(执行安装Brook后请勿重复安装)
- ${Green_font_prefix}12.${Font_color_suffix} iptables一键放行
+ ${Green_font_prefix}11.${Font_color_suffix} 安装CNAME依赖(若添加DDNS出现异常)
+ ${Green_font_prefix}12.${Font_color_suffix} 安装服务脚本(执行安装Brook后请勿重复安装)
+ ${Green_font_prefix}13.${Font_color_suffix} iptables一键放行
 ————————————" && echo
 if [[ -e ${brook_file} ]]; then
     check_pid
@@ -703,45 +750,51 @@ fi
 echo
 read -e -p " 请输入数字 [0-12]:" num
 case "$num" in
+    0)
+    Update_Shell
+    ;;
     1)
     Install_brook
     ;;
     2)
-    Uninstall_brook
+    Update_brook
     ;;
     3)
-    Start_brook
+    Uninstall_brook
     ;;
     4)
-    Stop_brook
+    Start_brook
     ;;
     5)
-    Restart_brook
+    Stop_brook
     ;;
     6)
-    Set_brook
+    Restart_brook
     ;;
     7)
+    Set_brook
+    ;;
+    8)
     check_installed_status
     list_port
     ;;
-    8)
+    9)
     View_Log
     ;;
-    9)
+    10)
     Set_crontab_monitor_brook
     ;;
-    10)
+    11)
     Install_Tools
     ;;
-	11)
-	Service_brook
-	;;
-	12)
-	Set_iptables
-	;;
+    12)
+    Service_brook
+    ;;
+    13)
+    Set_iptables
+    ;;
     *)
-    echo "请输入正确数字 [0-12]"
+    echo "请输入正确数字 [0-13]"
     ;;
 esac
 fi
