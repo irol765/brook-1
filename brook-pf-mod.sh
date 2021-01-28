@@ -732,10 +732,10 @@ else
  ${Green_font_prefix} 8.${Font_color_suffix} 查看 Brook 端口转发
  ${Green_font_prefix} 9.${Font_color_suffix} 查看 Brook 日志
  ${Green_font_prefix} 10.${Font_color_suffix} 监控 Brook 运行状态(如果使用DDNS必须打开)
- ————————————
- ${Green_font_prefix}11.${Font_color_suffix} 安装CNAME依赖(若添加DDNS出现异常)
- ${Green_font_prefix}12.${Font_color_suffix} 安装服务脚本(执行安装Brook后请勿重复安装)
- ${Green_font_prefix}13.${Font_color_suffix} iptables一键放行
+————————————
+  ${Green_font_prefix}11.${Font_color_suffix} 安装CNAME依赖(若添加DDNS出现异常)
+  ${Green_font_prefix}12.${Font_color_suffix} 安装服务脚本(执行安装Brook后请勿重复安装)
+  ${Green_font_prefix}13.${Font_color_suffix} iptables一键放行
 ————————————" && echo
 if [[ -e ${brook_file} ]]; then
     check_pid
